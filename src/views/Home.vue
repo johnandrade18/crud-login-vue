@@ -37,7 +37,7 @@ export default {
   },
   data() {
       return {
-          desserts: [],
+          desserts: null,
       }
   },
   Servicios : null,
@@ -49,8 +49,9 @@ export default {
   },
   methods: {
       getAll(){
-          this.Servicios.getAll().then(data =>{
-          this.desserts = data.data
+          this.Servicios.getAll().then(response =>{
+          this.desserts = response.data
+          console.log(this.desserts)
       })
       }
   },
