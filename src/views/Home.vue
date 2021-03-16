@@ -1,42 +1,58 @@
 <template>
   <v-container class="mt__10 height__100">
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      :items-per-page="5"
-      class="elevation-1"
-    ></v-data-table>
+    <ModalCrear/>
+    <v-simple-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">#</th>
+            <th class="text-left">Nombre</th>
+            <th class="text-left">Salario</th>
+            <th class="text-left">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in desserts" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.salary }}</td>
+            <td>
+                <v-btn class="orange darken-3 text-white pr-2">Editar</v-btn>
+                <v-btn class="red darken-4 text-white pl-2">Borrar</v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </v-container>
 </template>
 
 <script>
-import axios from "axios";
+import ModalCrear from '../components/ModalCrear.vue';
+import Servicios from '../servicios'
 export default {
   name: "Home",
+  components:{ 
+      ModalCrear,
+  },
   data() {
-    return {
-      headers: [
-        { text: "id", value: "id" },
-        { text: "Nombre", value: "name" },
-        { text: "Salario", value: "salary" },
-        { text: "Accion", value: "actions" },
-      ],
-      desserts: [],
-    }
+      return {
+          desserts: [],
+      }
+  },
+  Servicios : null,
+  created() {
+      this.Servicios = new Servicios();
   },
   mounted() {
-    this.getClientes();
+      this.getAll();
   },
   methods: {
-    getClientes() {
-      axios
-        .get("http://localhost:3000")
-        .then((response) => {
-          this.desserts = response.data
-          console.log(this.d)
-        })
-        .catch((error) => console.log(error));
-    },
+      getAll(){
+          this.Servicios.getAll().then(data =>{
+          this.desserts = data.data
+      })
+      }
   },
 };
 </script>
@@ -59,5 +75,15 @@ export default {
 }
 .height__100 {
   height: 100% !important;
+}
+.text-white{
+    color: #fff !important;
+}
+
+.pr-2{
+    margin-right: 2px;
+}
+.pl-2{
+    margin-left: 2px;
 }
 </style>
